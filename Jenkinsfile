@@ -30,7 +30,7 @@ pipeline {
             steps {
                 sh '''
                 docker rm -f ${IMAGE_NAME}-${BRANCH_NAME} || true
-                docker run --name ${IMAGE_NAME}-${BRANCH_NAME} $IMAGE_NAME:$TAG
+                docker run -d -p 8000:8080 --name ${IMAGE_NAME}-${BRANCH_NAME} $IMAGE_NAME:$TAG
                 '''
             }
         }
