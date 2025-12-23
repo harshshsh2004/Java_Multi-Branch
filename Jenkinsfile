@@ -1,5 +1,10 @@
 pipeline {
     agent any
+    
+    tools {
+        java 'jdk17'
+	maven 'mvn'
+    }
 
     environment {
         IMAGE_NAME = "java-multi-branch"
@@ -30,7 +35,7 @@ pipeline {
             steps {
                 sh '''
                 docker rm -f ${IMAGE_NAME}-${BRANCH_NAME} || true
-                docker run -d -p 8000:8080 --name ${IMAGE_NAME}-${BRANCH_NAME} $IMAGE_NAME:$TAG
+                docker run -d -p 8001:8080 --name ${IMAGE_NAME}-${BRANCH_NAME} $IMAGE_NAME:$TAG
                 '''
             }
         }
