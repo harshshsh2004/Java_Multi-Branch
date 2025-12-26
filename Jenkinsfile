@@ -42,7 +42,7 @@ pipeline {
 					sh '''
 							docker pull ${FULL_IMAGE}
 							docker rm -f ${IMAGE_NAME}-${TAG} || true
-							docker run -d -p 8081:4001 --name ${IMAGE_NAME}-${TAG} ${FULL_IMAGE}
+							docker run -d -p 8081:8080 --name ${IMAGE_NAME}-${TAG} ${FULL_IMAGE}
 					   '''
             }
         }
