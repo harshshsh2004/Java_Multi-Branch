@@ -29,7 +29,7 @@ pipeline {
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
 					sh '''
-							docker build -t ${FULL_IMAGE} 
+							docker build -t ${FULL_IMAGE} .
 							echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
 							docker push ${FULL_IMAGE}
 					   '''
