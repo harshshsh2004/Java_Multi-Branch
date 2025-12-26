@@ -3,12 +3,14 @@ pipeline {
     
     tools {
         jdk 'jdk17'
-		maven 'mvn'
+        maven 'mvn'
     }
 
     environment {
-        IMAGE_NAME = "java-multi-branch"
-        TAG = "${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
+        DOCKERHUB_USER = "harshshsh2004"
+        IMAGE_NAME     = "java-multi-branch"
+        TAG            = "${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
+        FULL_IMAGE     = "${DOCKERHUB_USER}/${IMAGE_NAME}:${TAG}"
     }
 
     stages {
@@ -19,24 +21,24 @@ pipeline {
             }
         }
 
-        stage('Maven Build') {
+        stage('Build') {
             steps {
-                sh 'mvn clean package'
-            }
-        }
-
-        stage('Docker Build') {
-            steps {
-                sh 'docker build -t $IMAGE_NAME:$TAG .'
+				    withCredentials([usernamePassword(
+                    credentialsId: 'docker-hub_cred',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+					sh 'docker build -t ${FULL_IMAGE} .'
+					sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin',
+					sh 'docker push ${FULL_IMAGE}'
             }
         }
 
         stage('Run Container') {
             steps {
-                sh '''
-                docker rm -f ${IMAGE_NAME}-${BRANCH_NAME} || true
-                docker run -d -p 8001:8080 --name ${IMAGE_NAME}-${BRANCH_NAME} $IMAGE_NAME:$TAG
-                '''
+					sh 'docker pull ${FULL_IMAGE}',
+					sh 'docker rm -f {IMAGE_NAME}-${TAG} || true',
+					sh 'docker run -d -p 8081:4001 ${FULL_IMAGE}:$TAG --name ${IMAGE_NAME}-${TAG}'
             }
         }
     }
