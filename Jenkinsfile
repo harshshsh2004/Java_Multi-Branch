@@ -28,17 +28,22 @@ pipeline {
                     usernameVariable: 'DOCKER_USER',
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
-					sh 'docker build -t ${FULL_IMAGE} .'
-					sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin',
-					sh 'docker push ${FULL_IMAGE}'
+					sh '''
+							docker build -t ${FULL_IMAGE} 
+							echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+							docker push ${FULL_IMAGE}
+					   '''
+					}
             }
         }
 
         stage('Run Container') {
             steps {
-					sh 'docker pull ${FULL_IMAGE}',
-					sh 'docker rm -f {IMAGE_NAME}-${TAG} || true',
-					sh 'docker run -d -p 8081:4001 ${FULL_IMAGE}:$TAG --name ${IMAGE_NAME}-${TAG}'
+					sh '''
+							docker pull ${FULL_IMAGE}
+							docker rm -f {IMAGE_NAME}-${TAG} || true
+							docker run -d -p 8081:4001 ${FULL_IMAGE}:$TAG --name ${IMAGE_NAME}-${TAG}
+					   '''
             }
         }
     }
