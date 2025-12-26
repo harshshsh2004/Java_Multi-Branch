@@ -41,8 +41,8 @@ pipeline {
             steps {
 					sh '''
 							docker pull ${FULL_IMAGE}
-							docker rm -f ${IMAGE_NAME}-${TAG} || true
-							docker run -d -p 8081:8080 --name ${IMAGE_NAME}-${TAG} ${FULL_IMAGE}
+							docker rm -f java_muti-branch_main || true
+							docker run -d -p 8081:8080 --name java_muti-branch_main ${FULL_IMAGE}
 					   '''
             }
         }
