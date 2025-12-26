@@ -7,8 +7,8 @@ pipeline {
     }
 
     environment {
-        DOCKERHUB_USER = "harshshsh2004"
-        IMAGE_NAME     = "java-multi-branch"
+        DOCKERHUB_USER = "harshshah2004"
+        IMAGE_NAME     = "java_multi-branch"
         TAG            = "${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
         FULL_IMAGE     = "${DOCKERHUB_USER}/${IMAGE_NAME}:${TAG}"
     }
